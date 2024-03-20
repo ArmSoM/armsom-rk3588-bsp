@@ -1,0 +1,11 @@
+# 2024-03-20 14:06:02
+# run hook: build kernel:
+
+Toolchain for kernel:
+/home/lhd/project/3588/work/github_sdk/linux5.10-rkr6/prebuilts/gcc/linux-x86/aarch64/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
+
+==========================================
+          Start building kernel
+==========================================
++ make -C /home/lhd/project/3588/work/github_sdk/linux5.10-rkr6/kernel/ -j13 CROSS_COMPILE=/home/lhd/project/3588/work/github_sdk/linux5.10-rkr6/prebuilts/gcc/linux-x86/aarch64/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu- ARCH=arm64 rockchip_linux_defconfig rk3588_linux.config
+make[1]: Entering directory '/home/lhd/project/3588/work/github_sdk/linux5.10-rkr6/kernel'

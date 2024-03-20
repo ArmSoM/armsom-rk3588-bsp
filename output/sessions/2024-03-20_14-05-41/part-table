@@ -1,0 +1,9 @@
+<hidden> 0x00004000
+uboot 0x00002000
+misc 0x00002000
+boot 0x00020000
+recovery 0x00040000
+backup 0x00010000
+rootfs 0x01c00000
+oem 0x00040000
+userdata -
