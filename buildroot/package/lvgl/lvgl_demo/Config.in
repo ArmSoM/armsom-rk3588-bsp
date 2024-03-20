@@ -1,0 +1,65 @@
+config BR2_PACKAGE_LVGL_DEMO
+	bool "LVGL demo"
+	default n
+	help
+	  lvgl demo
+
+choice
+	prompt "LVGL demo select"
+	depends on BR2_PACKAGE_LVGL_DEMO
+	config BR2_PACKAGE_LVGL_DEMO_WIDGETS
+		bool "lvgl demo widgets"
+		help
+		  Enbale lvgl demo widgets
+
+	config BR2_PACKAGE_LVGL_DEMO_KEYPAD_AND_ENCODER
+		bool "lvgl demo keypad and encoder"
+		help
+		  Enbale lvgl demo keypad and encoder
+
+	config BR2_PACKAGE_LVGL_DEMO_BENCHMARK
+		bool "lvgl demo benchmark"
+		help
+		  Enbale lvgl demo benchmark
+
+	config BR2_PACKAGE_LVGL_DEMO_STRESS
+		bool "lvgl demo stress"
+		help
+		  Enbale lvgl demo stress
+
+	config BR2_PACKAGE_LVGL_DEMO_MUSIC
+		bool "lvgl demo music"
+		help
+		  Enbale lvgl demo music
+
+	config BR2_PACKAGE_LVGL_DEMO_CUSTOM
+		bool "lvgl demo custom"
+		help
+		  Enbale lvgl demo custom
+
+	config BR2_PACKAGE_RK_DEMO
+		bool "RK demo"
+		select BR2_PACKAGE_RKWIFIBT_APP
+		select BR2_PACKAGE_RKADK
+		select BR2_PACKAGE_COMMON_ALGORITHM
+		select BR2_PACKAGE_COMMON_ALGORITHM_RKAPPLUS
+		help
+		  Rockchip LVGL demo
+
+endchoice
+
+choice
+	prompt "LVGL demo driver select"
+	config BR2_PACKAGE_LVGL_DEMO_USE_SDL
+		bool "sdl"
+		depends on BR2_PACKAGE_LV_DRIVERS_USE_SDL_GPU
+		help
+		  Use SDL for display
+
+	config BR2_PACKAGE_LVGL_DEMO_USE_DRM
+		bool "drm"
+		depends on BR2_PACKAGE_LV_DRIVERS_USE_DRM
+		help
+		  Use DRM for display
+
+endchoice
