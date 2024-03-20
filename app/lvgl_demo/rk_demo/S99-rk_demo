@@ -1,0 +1,27 @@
+#! /bin/sh
+
+start() {
+	set -a
+	mkdir -p /userdata/cfg
+	cp /etc/wpa_supplicant.conf /userdata/cfg/
+	amixer -c 0 cset numid=33 0
+	amixer -c 0 cset numid=34 0
+	export LV_DRIVERS_SET_PLANE=CURSOR
+	modetest -M rockchip -aw 68:zpos:1
+	modetest -M rockchip -aw 69:zpos:1
+	ulimit -n 90000
+	set +a
+	rk_demo &
+	udhcpc &
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  *)
+	echo "Usage: $0 {start}"
+	exit 1
+esac
+
+exit $?
