@@ -1,0 +1,77 @@
+Rockchip prebuilt tools (static linked)
+
+Prebuilt from Rockchip buildroot 2021 SDK:
+1886b190157 lockfile: Support static build
+
+Using rockchip_{rk3036,rk3326_64}_defconfig with addition configs:
+BR2_GCC_VERSION_11_X=y
+
+BR2_PACKAGE_ANDROID_TOOLS=y
+BR2_PACKAGE_ANDROID_TOOLS_STATIC=y
+
+BR2_PACKAGE_BUSYBOX=y
+BR2_PACKAGE_BUSYBOX_STATIC=y
+
+BR2_PACKAGE_LIBUNWIND=y
+BR2_PACKAGE_LIBUNWIND_STATIC=y
+BR2_PACKAGE_ELFUTILS=y
+
+BR2_PACKAGE_GDB=y
+BR2_PACKAGE_GDB_STATIC=y
+BR2_PACKAGE_GDB_DEBUGGER=y
+
+BR2_PACKAGE_LIBDRM=y
+BR2_PACKAGE_LIBDRM_STATIC=y
+
+BR2_PACKAGE_XZ=y
+BR2_PACKAGE_XZ_STATIC=y
+
+BR2_PACKAGE_ZLIB=y
+BR2_PACKAGE_BZIP2=y
+
+BR2_PACKAGE_LINUX_TOOLS_PERF=y
+BR2_PACKAGE_LINUX_TOOLS_PERF_STATIC=y
+
+BR2_PACKAGE_NCURSES=y
+BR2_PACKAGE_NCURSES_STATIC=y
+
+BR2_PACKAGE_PROCPS_NG=y
+BR2_PACKAGE_PROCPS_NG_STATIC=y
+
+BR2_PACKAGE_PROCRANK_LINUX=y
+BR2_PACKAGE_PROCRANK_LINUX_STATIC=y
+
+BR2_PACKAGE_RECOVERY=y
+BR2_PACKAGE_RECOVERY_STATIC=y
+BR2_PACKAGE_RECOVERY_UPDATEENGINEBIN=y
+
+BR2_PACKAGE_RKTOOLKIT=y
+BR2_PACKAGE_RKTOOLKIT_STATIC=y
+
+BR2_PACKAGE_RKWIFIBT=y
+BR2_PACKAGE_RKWIFIBT_STATIC=y
+
+BR2_PACKAGE_STRACE=y
+BR2_PACKAGE_STRACE_STATIC=y
+
+BR2_PACKAGE_LIBLOCKFILE=y
+BR2_PACKAGE_LIBLOCKFILE_STATIC=y
+BR2_PACKAGE_LOCKFILE_PROGS=y
+BR2_PACKAGE_LOCKFILE_PROGS_STATIC=y
+
+NOTE:
+For building perf:
+1/ Build dynamic version firstly
+2/ Enable BR2_PACKAGE_LINUX_TOOLS_PERF_STATIC
+3/ Run: make linux-tools-reconfigure
+
+For building kmsgrab:
+1/ ./build.sh shell
+2/ source ./buildroot/output/$RK_BUILDROOT_CFG/host/environment-setup
+3/ $CC $RK_DATA_DIR/kmsgrab.c $(pkg-config --cflags --libs libdrm) -static -o kmsgrab
+
+External sources:
+1/ rkwifibt:
+fe32b48 rkwifibt: bt: update bt firmware for ap chips
+2/ rktoolkit:
+bc1d85d vendor_storage: fixed hex string begin with 00, get wrong string length when read
