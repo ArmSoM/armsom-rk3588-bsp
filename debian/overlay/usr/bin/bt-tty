@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+BT_PINCTRL_DIR="/sys/firmware/devicetree/base/pinctrl/wireless-bluetooth"
+
+unset RK_BT_UART
+if [ -d "$BT_PINCTRL_DIR" ]; then
+	RK_BT_UART=$(ls "$BT_PINCTRL_DIR/" | grep -o "^uart[0-9]" | \
+		head -n 1 | sed 's/^uart//')
+fi
+
+echo ttyS${RK_BT_UART:-1}

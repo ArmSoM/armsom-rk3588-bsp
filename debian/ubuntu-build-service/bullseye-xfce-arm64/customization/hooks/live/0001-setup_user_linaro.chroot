@@ -1,0 +1,7 @@
+#!/bin/sh  
+
+echo "I: create armsom user"
+adduser --gecos armsom --disabled-login armsom
+
+echo "I: set armsom user password"
+echo "armsom:armsom" | chpasswd

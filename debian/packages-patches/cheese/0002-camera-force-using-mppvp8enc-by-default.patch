@@ -1,0 +1,26 @@
+From 08efa81c9cb14d6a753e01a97617e92095f19280 Mon Sep 17 00:00:00 2001
+From: Caesar Wang <wxt@rock-chips.com>
+Date: Thu, 6 Jul 2023 14:25:52 +0800
+Subject: [PATCH 2/2] camera: force using mppvp8enc by default
+
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+---
+ libcheese/cheese-camera.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libcheese/cheese-camera.c b/libcheese/cheese-camera.c
+index 7aa38066..2185892b 100644
+--- a/libcheese/cheese-camera.c
++++ b/libcheese/cheese-camera.c
+@@ -442,7 +442,7 @@ cheese_camera_set_video_recording (CheeseCamera *camera, GError **error)
+   gboolean res;
+ 
+   /* Check if we can use global preset for vp8enc. */
+-  video_enc = gst_element_factory_make ("vp8enc", "vp8enc");
++  video_enc = gst_element_factory_make ("mppvp8enc", "vp8enc");
+   video_preset = (gchar *) &CHEESE_VIDEO_ENC_PRESET;
+   res = gst_preset_load_preset (GST_PRESET (video_enc), video_preset);
+   if (res == FALSE) {
+-- 
+2.34.1
+

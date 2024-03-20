@@ -1,0 +1,24 @@
+From 609563ec5590e7817b43f44a86e46b9f16c6e1b1 Mon Sep 17 00:00:00 2001
+From: xiaoyao <xiaoyao@rock-chips.com>
+Date: Mon, 12 Jun 2023 21:55:06 +0800
+Subject: [PATCH 1/1] Don't turn off the bt power
+
+---
+ blueman/plugins/mechanism/RfKill.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/blueman/plugins/mechanism/RfKill.py b/blueman/plugins/mechanism/RfKill.py
+index c3296403..677bc414 100644
+--- a/blueman/plugins/mechanism/RfKill.py
++++ b/blueman/plugins/mechanism/RfKill.py
+@@ -15,5 +15,5 @@ class RfKill(MechanismPlugin):
+ 
+     def _set_rfkill_state(self, state, caller):
+         self.confirm_authorization(caller, "org.blueman.rfkill.setstate")
+-        with open('/dev/rfkill', 'r+b', buffering=0) as f:
+-            f.write(struct.pack("IBBBB", 0, RFKILL_TYPE_BLUETOOTH, RFKILL_OP_CHANGE_ALL, (0 if state else 1), 0))
++        #with open('/dev/rfkill', 'r+b', buffering=0) as f:
++        #    f.write(struct.pack("IBBBB", 0, RFKILL_TYPE_BLUETOOTH, RFKILL_OP_CHANGE_ALL, (0 if state else 1), 0))
+-- 
+2.17.1
+
