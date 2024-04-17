@@ -1,0 +1,234 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (c) 2022 Rockchip Electronics Co., Ltd.
+ *
+ */
+
+// kernel/include/dt-bindings/clock/rk3588-cru.h
+//  #define CLK_MIPI_CAMARAOUT_M0		255
+// #define CLK_MIPI_CAMARAOUT_M1		256
+// #define CLK_MIPI_CAMARAOUT_M2		257
+// #define CLK_MIPI_CAMARAOUT_M3		258
+// #define CLK_MIPI_CAMARAOUT_M4		259
+
+/ {
+	camera_pwdn_gpio: camera-pwdn-gpio {
+		status = "okay";
+		compatible = "regulator-fixed";
+		regulator-name = "camera_pwdn_gpio";
+		regulator-always-on;
+		regulator-boot-on;
+		enable-active-high;
+		gpio = <&gpio4 RK_PA6 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&cam_pwdn_gpio>;
+	};
+
+    camera_set: camera-set {
+		status = "okay";
+		compatible = "regulator-fixed";
+		regulator-name = "camera_set";
+		regulator-always-on;
+		regulator-boot-on;
+		enable-active-high;
+		gpio = <&gpio4 RK_PA7 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&cam_set>;
+	};
+
+	clk_cam_24m: external-camera-clock-24m {
+		status = "okay";
+		compatible = "fixed-clock";
+		clock-frequency = <24000000>;
+		clock-output-names = "clk_cam_24m";
+		#clock-cells = <0>;
+	};
+};
+
+&i2c3 {
+	status = "okay";
+	#address-cells = <1>;
+    #size-cells = <0>;
+
+	imx415: imx415@1a {
+		status = "disabled";
+		compatible = "sony,imx415";
+		reg = <0x1a>;
+		clocks = <&cru CLK_MIPI_CAMARAOUT_M3>;
+		clock-names = "xvclk";
+		pinctrl-names = "default";
+		pinctrl-0 = <&mipim0_camera3_clk>;
+		power-domains = <&power RK3588_PD_VI>;
+		pwdn-gpios = <&gpio1 RK_PB0 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio4 RK_PA0 GPIO_ACTIVE_LOW>;
+		rockchip,camera-module-index = <0>;
+		rockchip,camera-module-facing = "back";
+		rockchip,camera-module-name = "CMK-OT2022-PX1";
+		rockchip,camera-module-lens-name = "IR0147-50IRC-8M-F20";
+		port {
+			imx415_out0: endpoint {
+				remote-endpoint = <&mipidphy0_in_ucam0>;
+				data-lanes = <1 2 3 4>;
+			};
+		};
+	};
+
+	camera_imx219: camera-imx219@10 {
+		status = "okay";
+		compatible = "sony,imx219";
+		reg = <0x10>;
+		clock-names = "xvclk";
+		clocks = <&clk_cam_24m>;
+        VANA-supply = <&camera_pwdn_gpio>;   /* 2.8v */
+        VDIG-supply = <&camera_pwdn_gpio>;   /* 1.8v */
+        VDDL-supply = <&camera_pwdn_gpio>;   /* 1.2v */
+
+		rockchip,camera-module-index = <0>;
+		rockchip,camera-module-facing = "back";
+		rockchip,camera-module-name = "RADXA-CAMERA-8M";
+		rockchip,camera-module-lens-name = "default";
+
+		port {
+			imx219_out0: endpoint {
+				remote-endpoint = <&mipidphy4_in_ucam1>;
+				data-lanes = <1 2>;
+				clock-noncontinuous;
+                link-frequencies = /bits/ 64 <456000000>;
+			};
+		};
+	};
+};
+
+&csi2_dphy1_hw {
+	status = "okay";
+};
+
+&csi2_dphy4 {
+	status = "okay";
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@0 {
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipidphy0_in_ucam0: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&imx415_out0>;
+				data-lanes = <1 2 3 4>;
+			};
+
+			mipidphy4_in_ucam1: endpoint@2 {
+				reg = <2>;
+				remote-endpoint = <&imx219_out0>;
+				data-lanes = <1 2>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			csidphy4_out: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&mipi4_csi2_input>;
+			};
+		};
+	};
+};
+
+&mipi4_csi2 {
+	status = "okay";
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@0 {
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipi4_csi2_input: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&csidphy4_out>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipi4_csi2_output: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&cif_mipi4_in0>;
+			};
+		};
+	};
+};
+
+&rkcif {
+	status = "okay";
+};
+
+&rkcif_mipi_lvds4 {
+	status = "okay";
+
+	port {
+		cif_mipi4_in0: endpoint {
+			remote-endpoint = <&mipi4_csi2_output>;
+		};
+	};
+};
+
+&rkcif_mipi_lvds4_sditf {
+	status = "okay";
+
+	port {
+		mipi_lvds4_sditf: endpoint {
+			remote-endpoint = <&isp1_vir1>;
+		};
+	};
+};
+
+&rkcif_mmu {
+	status = "okay";
+};
+
+&rkisp1 {
+	status = "okay";
+};
+
+&isp1_mmu {
+	status = "okay";
+};
+
+&rkisp1_vir1 {
+	status = "okay";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		isp1_vir1: endpoint@0 {
+			reg = <0>;
+			remote-endpoint = <&mipi_lvds4_sditf>;
+		};
+	};
+};
+
+&pinctrl {
+	camera {
+		cam_pwdn_gpio: cam-pwdn-gpio {
+			rockchip,pins = <4 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>;
+		};
+        cam_set: cam-set {
+			rockchip,pins = <4 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
+		};
+	};
+};
